@@ -1,18 +1,16 @@
 import React from 'react';
 import Cell from './Cell';
+import styled from 'styled-components';
 
-export default function Row(props) {
-	let style = {
-		display: 'flex',
-		justifyContent: 'center',
-	};
-	var cells = [];
-	for (let i = 0; i < 7; i++) {
-		cells.push(<Cell key={i} cell={props.cells[i]} row={props.row} col={i} handleClick={props.handleClick} />);
-	}
-	return (
-		<div style={style}>
-			{cells}
-		</div>
-	);
-}
+const StyledRow = styled.div`
+	display: flex;
+	justify-content: center;
+`
+
+const Row = ({cells, row, handleClick}) => (
+	<StyledRow>
+		{Array(7).fill(null).map((_, i) => <Cell key={i} cell={cells[i]} row={row} col={i} handleClick={handleClick} />)}
+	</StyledRow>
+)
+
+export default Row;
