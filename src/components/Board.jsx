@@ -1,14 +1,8 @@
 import React from 'react';
 import Row from './Row';
 
-export default function Board(props) {
-	let rows = []
-	for (let i = 5; i >= 0; i--) {
-		rows.push(
-			<Row key={i} row={i} cells={props.cells[i]} handleClick={props.handleClick} />
-		);
-	}
-	return (
-		<div>{rows}</div>
-	);
-}
+const Board = ({cells, handleClick}) => <>
+	{Array(5).fill(null).map((_, i) => <Row key={i} row={i} cells={cells[i]} handleClick={handleClick} />).reverse()}
+</>
+
+export default Board;
