@@ -1,19 +1,16 @@
-import React from 'react';
+import styled from 'styled-components';
 
-export default function Circle(props) {
-	let color = 'white';
-	if (props.cell === 1) {
-		color = 'black';
-	} else if (props.cell === 2) {
-		color = 'red';
-	}
-	let style = {
-		backgroundColor: color,
-		border: '1px solid black',
-		borderRadius: '100%',
-		paddingTop: '98%'
-	};
-	return (
-		<div style={style}></div>
-	);
-}
+const colors = {
+	1: 'black',
+	2: 'red',
+	default: 'white',
+};
+
+const Circle = styled.div`
+	background-color: ${props => colors[props.cell] || colors['default']};
+	border: 1px solid black;
+	border-radius: 100%;
+	padding-top: 98%;
+`
+
+export default Circle;
