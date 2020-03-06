@@ -84,8 +84,8 @@ const Game = () => {
 
 	const restart = () => {
 		setPlayer(false);
-		setCells(cells);
-		setWinner(Array(6).fill(null).map((() => Array(7).fill(0))));
+		setWinner(0);
+		setCells(Array(6).fill(null).map(() => Array(7).fill(0)));
 	}
 
 	return (
