@@ -2,25 +2,23 @@ import React, {useState} from 'react';
 import Board from './Board';
 
 const Game = () => {
+	// negro: true | rojo: false
 	const [player, setPlayer] = useState(false);
-	const [cells, setCells] = useState(Array(6).fill(null).map((() => Array(7).fill(0))));
+	// 1: negro | 2: rojo
 	const [winner, setWinner] = useState(0);
+	const [cells, setCells] = useState(Array(6).fill(null).map(() => Array(7).fill(0)));
 
 	const handleClick = (row, col) => {
 		if (winner) return;
 		console.log(`row: ${row} | col: ${col}`);
-		console.log(player);
-		let temp = [];
-		for (let i = 0; i < 6; i++) {
-			temp.push(cells[i].slice());
-		}
+		let temp = [...cells];
 		let newRow = findAvailableRow(col);
 		temp[newRow][col] = player ? 1 : 2;
 		setCells(temp);
-		setPlayer(!player);
+		setPlayer(prevPlayer => !prevPlayer);
 		if (checkVictory(newRow, col)) {
 			console.log('win');
-			setWinner(player ? 2 : 1);
+			setWinner(prevPlayer => prevPlayer ? 1 : 2);
 		}
 	}
 
@@ -34,7 +32,7 @@ const Game = () => {
 	}
 
 	const checkVictory = (row, col) => {
-		let player_n = player ? 2 : 1;
+		let player_n = player ? 1 : 2;
 		let board = cells;
 		let contador = 0;
 		// horizontal
