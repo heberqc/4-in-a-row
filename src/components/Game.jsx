@@ -4,6 +4,7 @@ import {
 	checkDiagonal,
 	checkHorizontal,
 	transpose,
+	y_reflect,
 } from './../util';
 
 const Game = () => {
@@ -15,16 +16,15 @@ const Game = () => {
 
 	useEffect(() => {
 		const num = player ? 2 : 1;
-		console.log('num:', num)
+		// console.log('num:', num)
 		if (checkVictory(cells, num, 4)) {
-			console.log('ganaste')
 			setWinner(prevPlayer => prevPlayer ? 1 : 2);
 		}
-	}, [cells])
+	}, [cells, player])
 	
 	const handleClick = (row, col) => {
 		if (winner) return; 
-		console.log(`row: ${row} | col: ${col}`);
+		// console.log(`row: ${row} | col: ${col}`);
 		let temp = [...cells];
 		let newRow = findAvailableRow(col);
 		temp[newRow][col] = player ? 1 : 2;
@@ -42,21 +42,21 @@ const Game = () => {
 	}
 
 	const checkVictory = (matrix, value, minLen) => {
-		console.log(matrix, value, minLen)
-		if (checkHorizontal(matrix, value, minLen)) {
+		// console.log(matrix, value, minLen)
+		const mat = matrix.map(row => row.slice());
+		if (checkHorizontal(mat, value, minLen)) {
 			return true;
 		}
-		const t_matrix = transpose(matrix);
 		// vertical
-		if (checkHorizontal(t_matrix, value, minLen)) {
+		if (checkHorizontal(transpose(mat), value, minLen)) {
 			return true;
 		}
 		// diagonales positivas
-		if (checkDiagonal(matrix, value, minLen)) {
+		if (checkDiagonal(mat, value, minLen)) {
 			return true;
 		}
 		// diagonal negativas
-		if (checkDiagonal(t_matrix, value, minLen)) {
+		if (checkDiagonal(y_reflect(mat), value, minLen)) {
 			return true;
 		}
 		return false;

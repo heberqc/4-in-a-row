@@ -75,3 +75,7 @@ export function checkDiagonal(matrix, value, minLen) {
   }
   return false
 }
+
+export function y_reflect(matrix) {
+  return matrix.map(row => row.reverse());
+}
