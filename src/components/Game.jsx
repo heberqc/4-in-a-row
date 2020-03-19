@@ -1,5 +1,10 @@
-import React, {useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Board from './Board';
+import {
+	checkDiagonal,
+	checkHorizontal,
+	transpose,
+} from './../util';
 
 const Game = () => {
 	// negro: true | rojo: false
@@ -8,18 +13,23 @@ const Game = () => {
 	const [winner, setWinner] = useState(0);
 	const [cells, setCells] = useState(Array(6).fill(null).map(() => Array(7).fill(0)));
 
+	useEffect(() => {
+		const num = player ? 2 : 1;
+		console.log('num:', num)
+		if (checkVictory(cells, num, 4)) {
+			console.log('ganaste')
+			setWinner(prevPlayer => prevPlayer ? 1 : 2);
+		}
+	}, [cells])
+	
 	const handleClick = (row, col) => {
-		if (winner) return;
+		if (winner) return; 
 		console.log(`row: ${row} | col: ${col}`);
 		let temp = [...cells];
 		let newRow = findAvailableRow(col);
 		temp[newRow][col] = player ? 1 : 2;
 		setCells(temp);
 		setPlayer(prevPlayer => !prevPlayer);
-		if (checkVictory(newRow, col)) {
-			console.log('win');
-			setWinner(prevPlayer => prevPlayer ? 1 : 2);
-		}
 	}
 
 	const findAvailableRow = (col) => {
@@ -31,54 +41,24 @@ const Game = () => {
 		return -1;
 	}
 
-	const checkVictory = (row, col) => {
-		let player_n = player ? 1 : 2;
-		let board = cells;
-		let contador = 0;
-		// horizontal
-		for (let i = 0; col + i < 7; i++) {
-			if (board[row][col + i] === player_n) contador++;
-			else break;
+	const checkVictory = (matrix, value, minLen) => {
+		console.log(matrix, value, minLen)
+		if (checkHorizontal(matrix, value, minLen)) {
+			return true;
 		}
-		for (let i = 1; col - i >= 0; i++) {
-			if (board[row][col - i] === player_n) contador++;
-			else break;
-		}
-		if (contador >= 4) return true;
-		else contador = 0;
-		// positive diagonal
-		for (let i = 0; row + i < 6 && col + i < 7; i++) {
-			if (board[row + i][col + i] === player_n) contador++;
-			else break;
-		}
-		for (let i = 1; row - i >= 0 && col - i >= 0; i++) {
-			if (board[row - i][col - i] === player_n) contador++;
-			else break;
-		}
-		if (contador >= 4) return true;
-		else contador = 0;
-		// negative diagonal
-		for (let i = 0; row + i < 6 && col - i >= 0; i++) {
-			if (board[row + i][col - i] === player_n) contador++;
-			else break;
-		}
-		for (let i = 1; row - i >= 0 && col + i < 7; i++) {
-			if (board[row - i][col + i] === player_n) contador++;
-			else break;
-		}
-		if (contador >= 4) return true;
-		else contador = 0;
+		const t_matrix = transpose(matrix);
 		// vertical
-		for (let i = 0; row + i < 6; i++) {
-			if (board[row + i][col] === player_n) contador++;
-			else break;
+		if (checkHorizontal(t_matrix, value, minLen)) {
+			return true;
 		}
-		for (let i = 1; row - i >= 0; i++) {
-			if (board[row - i][col] === player_n) contador++;
-			else break;
+		// diagonales positivas
+		if (checkDiagonal(matrix, value, minLen)) {
+			return true;
 		}
-		if (contador >= 4) return true;
-		else contador = 0;
+		// diagonal negativas
+		if (checkDiagonal(t_matrix, value, minLen)) {
+			return true;
+		}
 		return false;
 	}
 
